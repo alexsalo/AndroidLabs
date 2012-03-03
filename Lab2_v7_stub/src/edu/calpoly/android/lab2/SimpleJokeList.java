@@ -3,10 +3,16 @@ package edu.calpoly.android.lab2;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TableLayout;
+import android.widget.TextView;
 
 public class SimpleJokeList extends Activity {
 
@@ -40,7 +46,18 @@ public class SimpleJokeList extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// TODO
+	    initLayout();
+	    
+	    m_nDarkColor = getResources().getColor(R.color.dark);
+	    m_nLightColor = getResources().getColor(R.color.light);
+	    m_arrJokeList = new ArrayList<Joke>();	
+	    
+	    String[] Jokes = this.getResources().getStringArray(R.array.jokeList);
+	    for (String s : Jokes){
+	    	addJoke(s);
+	    }
+	    Log.d("salo", "wtf??gfg");
+	    
 	}
 	
 	/**
@@ -48,7 +65,28 @@ public class SimpleJokeList extends Activity {
 	 * for this Activity. 
 	 */
 	protected void initLayout() {
-		// TODO
+		LinearLayout rootGroupLayout = new LinearLayout(this);
+		rootGroupLayout.setOrientation(LinearLayout.VERTICAL);		
+		
+		LinearLayout manageToolsLayout = new LinearLayout(this);
+		manageToolsLayout.setOrientation(LinearLayout.HORIZONTAL);		
+		m_vwJokeLayout = new LinearLayout(this);
+		m_vwJokeLayout.setOrientation(LinearLayout.VERTICAL);
+		
+		ScrollView scrViewOfJokes = new ScrollView(this);
+		scrViewOfJokes.addView(m_vwJokeLayout);
+		
+		m_vwJokeButton = new Button(this);
+		m_vwJokeButton.setText("Add Joke");
+		m_vwJokeEditText = new EditText(this);
+		m_vwJokeEditText.setHint("Enter your joke here");
+		//m_vwJokeEditText.setLayoutParams(null);
+		manageToolsLayout.addView(m_vwJokeButton);
+		manageToolsLayout.addView(m_vwJokeEditText);
+		
+		rootGroupLayout.addView(manageToolsLayout);
+		rootGroupLayout.addView(scrViewOfJokes);
+		setContentView(rootGroupLayout);
 	}
 	
 	/**
@@ -68,6 +106,15 @@ public class SimpleJokeList extends Activity {
 	 *            A string containing the text of the Joke to add.
 	 */
 	protected void addJoke(String strJoke) {
-		// TODO
+		Joke j = new Joke(strJoke);
+		m_arrJokeList.add(j);
+		
+		TextView tv = new TextView(this);
+		tv.setText(strJoke);
+		tv.setTextSize(16);
+		int color;
+		color = (m_arrJokeList.size() % 2 == 0) ? m_nLightColor : m_nDarkColor;
+		tv.setBackgroundColor(color);
+		m_vwJokeLayout.addView(tv);
 	}
 }

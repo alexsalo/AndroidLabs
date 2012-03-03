@@ -111,7 +111,10 @@ public class Joke {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		String s = obj.toString();
-		return  this.m_strJoke.equals(s);
+		if (obj instanceof Joke){
+			Joke j = (Joke)obj;
+			return j.getJoke().equals(m_strJoke);
+		}
+		return false;
 	}
 }
