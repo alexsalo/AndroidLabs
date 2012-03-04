@@ -3,15 +3,18 @@ package edu.calpoly.android.lab2;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.content.res.Resources;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 public class SimpleJokeList extends Activity {
@@ -47,6 +50,7 @@ public class SimpleJokeList extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	    initLayout();
+	    initAddJokeListeners();
 	    
 	    m_nDarkColor = getResources().getColor(R.color.dark);
 	    m_nLightColor = getResources().getColor(R.color.light);
@@ -80,13 +84,23 @@ public class SimpleJokeList extends Activity {
 		m_vwJokeButton.setText("Add Joke");
 		m_vwJokeEditText = new EditText(this);
 		m_vwJokeEditText.setHint("Enter your joke here");
-		//m_vwJokeEditText.setLayoutParams(null);
+		LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT,
+				LayoutParams.FILL_PARENT);
+		m_vwJokeEditText.setLayoutParams(params);
 		manageToolsLayout.addView(m_vwJokeButton);
 		manageToolsLayout.addView(m_vwJokeEditText);
 		
 		rootGroupLayout.addView(manageToolsLayout);
 		rootGroupLayout.addView(scrViewOfJokes);
 		setContentView(rootGroupLayout);
+	}
+	/**
+	 * Method used to hide keyboard easily
+	 */
+	protected void hideSoftKeyboard() {
+		InputMethodManager imm = (InputMethodManager)
+				getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(m_vwJokeEditText.getWindowToken(), 0);
 	}
 	
 	/**
@@ -95,7 +109,18 @@ public class SimpleJokeList extends Activity {
 	 * list. 
 	 */
 	protected void initAddJokeListeners() {
-		// TODO
+		m_vwJokeButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				String s  = m_vwJokeEditText.getText().toString(); 
+				if (s.length() != 0){
+					Joke j = new Joke();
+					j.setJoke(s);
+					addJoke(s);
+					m_vwJokeEditText.setText("");
+					hideSoftKeyboard();
+				}
+			}
+		});
 	}
 
 	/**
@@ -111,7 +136,7 @@ public class SimpleJokeList extends Activity {
 		
 		TextView tv = new TextView(this);
 		tv.setText(strJoke);
-		tv.setTextSize(16);
+		tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, 16);
 		int color;
 		color = (m_arrJokeList.size() % 2 == 0) ? m_nLightColor : m_nDarkColor;
 		tv.setBackgroundColor(color);
