@@ -14,7 +14,6 @@ import android.widget.RadioButton;
 import edu.calpoly.android.lab3.Joke;
 import edu.calpoly.android.lab3.AdvancedJokeList;
 import edu.calpoly.android.lab3.JokeView;
-import edu.calpoly.android.lab3.R;
 
 public class AdvancedJokeListTest2 extends ActivityInstrumentationTestCase2<AdvancedJokeList> {
 	public AdvancedJokeListTest2() {

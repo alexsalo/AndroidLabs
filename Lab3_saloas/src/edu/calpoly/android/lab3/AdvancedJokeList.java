@@ -10,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -84,50 +85,16 @@ public class AdvancedJokeList extends Activity {
 	    	addJoke(j);
 	    }
 	}
-	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		super.onKeyDown(keyCode, event);
-		switch (keyCode){
-			case KeyEvent.KEYCODE_ENTER: 
-				addJokeMethod();
-			case KeyEvent.KEYCODE_DPAD_CENTER:
-				addJokeMethod();
-			case KeyEvent.KEYCODE_BACK:
-				
-		}
-		return false;
-	}
 
 	/**
 	 * Method is used to encapsulate the code that initializes and sets the
 	 * Layout for this Activity.
 	 */
-	protected void initLayout() {
-		LinearLayout rootGroupLayout = new LinearLayout(this);
-		rootGroupLayout.setOrientation(LinearLayout.VERTICAL);		
-		
-		LinearLayout manageToolsLayout = new LinearLayout(this);
-		manageToolsLayout.setOrientation(LinearLayout.HORIZONTAL);		
-		m_vwJokeLayout = new LinearLayout(this);
-		m_vwJokeLayout.setOrientation(LinearLayout.VERTICAL);
-		
-		ScrollView scrViewOfJokes = new ScrollView(this);
-		scrViewOfJokes.addView(m_vwJokeLayout);
-		
-		m_vwJokeButton = new Button(this);
-		m_vwJokeButton.setText("Add Joke");
-		m_vwJokeEditText = new EditText(this);
-		m_vwJokeEditText.setHint("Enter your joke here");
-		LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT,
-				LayoutParams.FILL_PARENT);
-		m_vwJokeEditText.setLayoutParams(params);
-		manageToolsLayout.addView(m_vwJokeButton);
-		manageToolsLayout.addView(m_vwJokeEditText);
-		
-		rootGroupLayout.addView(manageToolsLayout);
-		rootGroupLayout.addView(scrViewOfJokes);
-		setContentView(rootGroupLayout);
+	protected void initLayout() {		
+		setContentView(R.layout.advanced);
+		m_vwJokeButton = (Button)findViewById(R.id.addJokeButton);
+		m_vwJokeEditText = (EditText)findViewById(R.id.newJokeEditText);
+		m_vwJokeLayout = (LinearLayout)findViewById(R.id.jokeListViewGroup);
 	}
 
 	/**
@@ -146,6 +113,7 @@ public class AdvancedJokeList extends Activity {
 	 */
 	protected void initAddJokeListeners() {
 		m_vwJokeButton.setOnClickListener(new addJokeClickListner()); 
+		m_vwJokeEditText.setOnKeyListener(new onJokeKeyListner());
 	}
 
 	/**
@@ -158,13 +126,12 @@ public class AdvancedJokeList extends Activity {
 	protected void addJoke(Joke joke) {
 		m_arrJokeList.add(joke);
 		
-		TextView tv = new TextView(this);
-		tv.setText(joke.getJoke());
-		tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, 22);
+		JokeView jv = new JokeView(this.getApplicationContext(), joke);
+		jv.setJoke(joke);
 		int color;
 		color = (m_arrJokeList.size() % 2 == 0) ? m_nLightColor : m_nDarkColor;
-		tv.setBackgroundColor(color);
-		m_vwJokeLayout.addView(tv);
+		jv.setBackgroundColor(color);
+		m_vwJokeLayout.addView(jv);
 	}
 
 	/**
@@ -203,21 +170,6 @@ public class AdvancedJokeList extends Activity {
 	protected void uploadJokeToServer(Joke joke) {
 		// TODO
 	}
-
-	/**
-	 * used in addJokeListner 
-	 * onKeyDownEvents
-	 */
-	protected void addJokeMethod(){
-		String s  = m_vwJokeEditText.getText().toString(); 
-		if (s.length() != 0){
-			Joke j = new Joke();
-			j.setJoke(s);
-			addJoke(j);
-			m_vwJokeEditText.setText("");
-			hideSoftKeyboard();
-		}
-	}
 	
 	/**
 	 * for any buttons who can add joke
@@ -226,7 +178,20 @@ public class AdvancedJokeList extends Activity {
 	 */
 	protected class addJokeClickListner implements OnClickListener{
 		public void onClick(View v) {
-			addJokeMethod();
+			if (m_vwJokeButton == (Button) v)
+				addJoke(new Joke(m_vwJokeEditText.getText().toString(),"S"));	
+		}
+	}
+	
+	protected class onJokeKeyListner implements OnKeyListener{
+		public boolean onKey(View v, int keyCode, KeyEvent event) {
+			if (m_vwJokeEditText == (EditText) v
+				 && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) 
+				 && event.getAction() == KeyEvent.ACTION_DOWN ){
+				addJoke(new Joke(m_vwJokeEditText.getText().toString(),"S"));	
+				return true;
+			}
+			return false;
 		}
 	}
 }
