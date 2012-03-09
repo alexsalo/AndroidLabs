@@ -180,11 +180,31 @@ public class AdvancedJokeList extends Activity {
 		return true;
 	}
 	
+	protected void filterCopyArrayByRatingMatches(int rating){
+		ArrayList<Joke> filteredJokes = new ArrayList<Joke>();
+		for (Joke j : m_arrJokeList){
+			if (j.getRating() == rating)
+				filteredJokes.add(j);
+		}
+		m_jokeAdapter = new JokeListAdapter(getApplicationContext(), filteredJokes);
+		m_vwJokeLayout.setAdapter(m_jokeAdapter);
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()){
 		case R.id.like_menuitem:
-			m_vwJokeButton.setText("fdfdf");
+			filterCopyArrayByRatingMatches(Joke.LIKE);
+			return true;
+		case R.id.dislike_menuitem:
+			filterCopyArrayByRatingMatches(Joke.DISLIKE);
+			return true;
+		case R.id.unrated_menuitem:
+			filterCopyArrayByRatingMatches(Joke.UNRATED);
+			return true;
+		case R.id.show_all_menuitem:
+			m_jokeAdapter = new JokeListAdapter(getApplicationContext(), m_arrJokeList);
+			m_vwJokeLayout.setAdapter(m_jokeAdapter);
 			return true;
 		case R.id.download_menuitem:
 			getJokesFromServer();
@@ -208,7 +228,12 @@ public class AdvancedJokeList extends Activity {
 	 * 
 	 */
 	protected void getJokesFromServer() {
-		// TODO
+		try {
+			java.net.URL URL = new java.net.URL("http://simexusa.com/aac/getAllJokes.php");
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -232,9 +257,12 @@ public class AdvancedJokeList extends Activity {
 	protected void uploadJokeToServer(Joke joke) {
 		String responseString = "";
 		try {
-			String s = java.net.URLEncoder.encode("http://simexusa.com/aac/addJoke.php?"+
-					joke.getJoke()+"&"+joke.getAuthor(), "UTF-8");
-			InputStream response = new java.net.URL(s).openStream();
+			String mURL = "http://simexusa.com/aac/addOneJoke.php?";
+			mURL += "joke=";
+			mURL += java.net.URLEncoder.encode(joke.getJoke());
+			mURL += "&author=";
+			mURL += java.net.URLEncoder.encode(joke.getAuthor());
+			InputStream response = new java.net.URL(mURL).openStream();
 			responseString = response.toString();
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
