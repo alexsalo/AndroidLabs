@@ -1,5 +1,6 @@
 package edu.calpoly.android.lab3;
 
+import java.text.ChoiceFormat;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -16,6 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -39,7 +41,7 @@ public class AdvancedJokeList extends Activity {
 	/**
 	 * ViewGroup used for maintaining a list of Views that each display Jokes.
 	 **/
-	protected LinearLayout m_vwJokeLayout;
+	protected ListView m_vwJokeLayout;
 
 	/**
 	 * EditText used for entering text for a new Joke to be added to
@@ -77,6 +79,9 @@ public class AdvancedJokeList extends Activity {
 	    m_nDarkColor = getResources().getColor(R.color.dark);
 	    m_nLightColor = getResources().getColor(R.color.light);
 	    m_arrJokeList = new ArrayList<Joke>();	
+	    m_jokeAdapter = new JokeListAdapter(getApplicationContext(), m_arrJokeList);
+	    
+	    m_vwJokeLayout.setAdapter(m_jokeAdapter);
 	    
 	    String[] Jokes = this.getResources().getStringArray(R.array.jokeList);
 	    for (String s : Jokes){
@@ -94,7 +99,9 @@ public class AdvancedJokeList extends Activity {
 		setContentView(R.layout.advanced);
 		m_vwJokeButton = (Button)findViewById(R.id.addJokeButton);
 		m_vwJokeEditText = (EditText)findViewById(R.id.newJokeEditText);
-		m_vwJokeLayout = (LinearLayout)findViewById(R.id.jokeListViewGroup);
+		m_vwJokeLayout = (ListView)findViewById(R.id.jokeListViewGroup);
+		
+		m_vwJokeLayout.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 	}
 
 	/**
@@ -125,13 +132,14 @@ public class AdvancedJokeList extends Activity {
 	 */
 	protected void addJoke(Joke joke) {
 		m_arrJokeList.add(joke);
+		m_jokeAdapter.notifyDataSetChanged();
 		
-		JokeView jv = new JokeView(this.getApplicationContext(), joke);
+		/*JokeView jv = new JokeView(this.getApplicationContext(), joke);
 		jv.setJoke(joke);
 		int color;
 		color = (m_arrJokeList.size() % 2 == 0) ? m_nLightColor : m_nDarkColor;
 		jv.setBackgroundColor(color);
-		m_vwJokeLayout.addView(jv);
+		m_vwJokeLayout.addView(jv);*/
 	}
 
 	/**

@@ -21,6 +21,7 @@ public class JokeView extends RelativeLayout implements Checkable {
 	private RadioGroup m_vwLikeGroup;
 	private TextView m_vwJokeText;
 	private Joke m_joke;
+	private boolean isChekedFl;
 
 	public static final String EXPAND = " + ";
 	public static final String COLLAPSE = " - ";
@@ -58,12 +59,9 @@ public class JokeView extends RelativeLayout implements Checkable {
 		});
 		this.m_vwLikeGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				switch (checkedId){
-				case (0):
-					m_joke.setRating(Joke.LIKE);
-				case (1):
-					m_joke.setRating(Joke.DISLIKE);
-				}
+				 if (m_vwLikeGroup == group)
+                     m_joke.setRating(checkedId == R.id.likeButton ? Joke.LIKE
+                                     : Joke.DISLIKE);
 			}
 		});
 	}
@@ -120,18 +118,18 @@ public class JokeView extends RelativeLayout implements Checkable {
 	}
 
 	public boolean isChecked() {
-		// TODO Auto-generated method stub
-		return false;
+		return isChekedFl;
 	}
 
 	public void setChecked(boolean checked) {
-		// TODO Auto-generated method stub
-		
+		if (isChekedFl != checked)
+			expandJokeView();
+		else
+			collapseJokeView();
 	}
 
 	public void toggle() {
-		// TODO Auto-generated method stub
-		
+		setChecked(!isChekedFl);
 	}
 
 }
