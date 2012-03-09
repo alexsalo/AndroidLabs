@@ -23,22 +23,32 @@ public final class R {
     public static final class id {
         public static final int addJokeButton=0x7f080002;
         public static final int dislikeButton=0x7f08000a;
+        public static final int dislike_menuitem=0x7f08000f;
+        public static final int download_menuitem=0x7f080012;
         public static final int expandButton=0x7f080006;
+        public static final int filter_menuitem=0x7f08000d;
         public static final int jokeListViewGroup=0x7f080004;
         public static final int jokeTextView=0x7f080007;
         public static final int likeButton=0x7f080009;
+        public static final int like_menuitem=0x7f08000e;
         public static final int manageTools=0x7f080001;
         public static final int newJokeEditText=0x7f080003;
         public static final int ratingRadioGroup=0x7f080008;
+        public static final int remove_contextmenu=0x7f08000b;
         public static final int rootJokeListLayout=0x7f080000;
         public static final int rootJokeViewWidgetLayout=0x7f080005;
+        public static final int show_all_menuitem=0x7f080011;
+        public static final int unrated_menuitem=0x7f080010;
+        public static final int upload_contextmenu=0x7f08000c;
+        public static final int upload_menuitem=0x7f080013;
     }
     public static final class layout {
         public static final int advanced=0x7f030000;
         public static final int joke_view=0x7f030001;
     }
     public static final class menu {
-        public static final int menu=0x7f070000;
+        public static final int joke_listview_context_menu=0x7f070000;
+        public static final int menu=0x7f070001;
     }
     public static final class string {
         public static final int app_name=0x7f050001;
